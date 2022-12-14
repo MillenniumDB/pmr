@@ -4,6 +4,7 @@
 obj/*
 bin/*
 build/
+dbs/
 
 ### C++ ###
 # Prerequisites
