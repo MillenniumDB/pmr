@@ -72,6 +72,7 @@ def execute_query(query, out, pid):
             out.write(f'\'{query}\t{results_count}\tTIMEOUT\t{elapsed_time}\t{out_cmd}\n')
         else:
             out.write(f'\'{query}\t0\tERROR\t{elapsed_time}\t{out_cmd}\n')
+    out.flush()
 
 
 def run_benchmark(db_name, output_filename, queries):
