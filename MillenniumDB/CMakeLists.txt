@@ -41,20 +41,6 @@ set(BUILD_TARGETS
     query
 )
 
-set(TEST_TARGETS
-    compare_datetime
-    compare_decimal_both_ext
-    compare_decimal_both_inl
-    compare_decimal_inl_ext
-    normalize_decimal
-    playground
-    # parse_sparql
-    # create_bpt
-    # check_bpts
-    # check_extendible_hash
-    # execute_query
-)
-
 foreach(target ${BUILD_TARGETS})
     add_executable(${target} ${CMAKE_SOURCE_DIR}/src/bin/${target}.cc)
     target_link_libraries(${target}
@@ -62,15 +48,4 @@ foreach(target ${BUILD_TARGETS})
         antlr4_cpp_runtime
         stdc++fs
     )
-endforeach(target)
-
-enable_testing()
-foreach(target ${TEST_TARGETS})
-    add_executable(${target} ${CMAKE_SOURCE_DIR}/src/tests/${target}.cc)
-    target_link_libraries(${target}
-        millenniumdb
-        antlr4_cpp_runtime
-        stdc++fs
-    )
-    add_test(NAME ${target} COMMAND $<TARGET_FILE:${target}>)
 endforeach(target)

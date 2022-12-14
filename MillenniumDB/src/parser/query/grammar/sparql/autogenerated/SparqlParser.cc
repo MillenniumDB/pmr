@@ -13505,7 +13505,7 @@ bool SparqlParser::sempred(RuleContext *context, size_t ruleIndex, size_t predic
   return true;
 }
 
-bool SparqlParser::expressionSempred(ExpressionContext *_localctx, size_t predicateIndex) {
+bool SparqlParser::expressionSempred(ExpressionContext* /*_localctx*/, size_t predicateIndex) {
   switch (predicateIndex) {
     case 0: return precpred(_ctx, 7);
     case 1: return precpred(_ctx, 6);
