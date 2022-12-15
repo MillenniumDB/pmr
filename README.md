@@ -1,20 +1,33 @@
 # Replicating the experiments
 
 - Clone this repo
-- `cd pmr`
-- `export PMR_HOME=$(pwd)`
+- Enter to this project root directory
+    - `cd pmr`
+
+- Set PMR_HOME with the path of this project root directory
+    - `export PMR_HOME=$(pwd)`
 
 ## MillenniumDB
-- Install MillenniumDB dependencies:
-`sudo apt update`
-`sudo apt install git g++ cmake libboost-all-dev`
+These instructions works on Ubuntu 20.04. Other linux distros might need to install dependencies differently. Libboost version used is 1.71.0, with other versions MillenniumDB might not compile.
 
-- `cd MillenniumDB`
-- compile MDB: `cmake -Bbuild/Release -DCMAKE_BUILD_TYPE=Release && cmake --build build/Release/`
-- Create Diamond1000 database: `build/Release/bin/create_db ../data/diamond_1000.mdb dbs/diamond_1000`
-- Create Facebook database `build/Release/bin/create_db ../data/facebook.mdb dbs/facebook`
+- Install MillenniumDB dependencies.
+    - `sudo apt update`
+    - `sudo apt install g++ cmake libboost-all-dev`
 
-- `cd ..`
+- Change directory to the MillenniumDB folder
+    - `cd MillenniumDB`
+
+- Compile MillenniumDB:
+    - `cmake -Bbuild/Release -DCMAKE_BUILD_TYPE=Release && cmake --build build/Release/`
+
+- Create Diamond1000 database:
+    - `build/Release/bin/create_db ../data/diamond_1000.mdb dbs/diamond_1000`
+
+- Create Facebook database
+    - `build/Release/bin/create_db ../data/facebook.mdb dbs/facebook`
+
+- Go back to this project root directory
+    - `cd ..`
 
 - Run diamond1000 benchmark:
     - `python3 scripts/benchmark_mdb_diamond.py`
@@ -23,12 +36,16 @@
 
 
 ## Neo4J
-- `pip3 install neo4j`
+- Install Neo4J python driver
+    - `pip3 install neo4j`
+
 - Download and extract the neo4j linux executable: https://neo4j.com/download-center/#community
 
-- Set NEO4J_HOME (`export NEO4J_HOME=/path/to/neo4j/folder`)
+- Set NEO4J_HOME with the path of the folder extracted
+    - `export NEO4J_HOME=/path/to/neo4j/folder`
 
-- `cd $NEO4J_HOME`
+- Change directory to that folder:
+    - `cd $NEO4J_HOME`
 
 - Create facebook database
     ```
@@ -51,13 +68,21 @@
     dbms.security.auth_enabled=false
     cypher.forbid_shortestpath_common_nodes=false
     ```
+- Run the benchmar with facebook graph:
+    - Start the neo4j server
+        - `bin/neo4j console`
 
-- `bin/neo4j console`
-- wait until the server is ready and run the benchmark in another terminal: `python3 scripts/benchmark_neo4j_facebook.py`
+    - Wait until the server is ready and run the benchmark in another terminal:
+        - `python3 scripts/benchmark_neo4j_facebook.py`
 
-- Once the benchmark finish, interrupt the neo4j server with CTRL-C.
+    - After the benchmark is finished, kill the neo4j server with CTRL-C.
 
-- Edit `conf/neo4j.conf` and replace `dbms.default_database=facebook` with `dbms.default_database=diamond1000`
+- Run the benchmar with facebook graph:
+    - Edit `conf/neo4j.conf` and replace `dbms.default_database=facebook` with `dbms.default_database=diamond1000`
 
-- `bin/neo4j console`
-- wait until the server is ready and run the benchmark in another terminal: `python3 scripts/benchmark_neo4j_diamond.py`
+    - Start the neo4j server
+        - `bin/neo4j console`
+    - Wait until the server is ready and run the benchmark in another terminal:
+        - `python3 scripts/benchmark_neo4j_diamond.py`
+
+    - After the benchmark is finished, kill the neo4j server with CTRL-C.
