@@ -86,3 +86,25 @@ These instructions works on Ubuntu 20.04. Other linux distros might need to inst
         - `python3 scripts/benchmark_neo4j_diamond.py`
 
     - After the benchmark is finished, kill the neo4j server with CTRL-C.
+
+# Running WDBench
+
+## MillenniumDB
+For MillenniumDB we select 576 of the 660 [original queries](https://github.com/MillenniumDB/WDBench/blob/master/Queries/paths.txt), filtering out those that do not have a fixed node. Queries are at `WDBench/sparql_paths_filtered.txt`.
+
+- Download the dataset from [Figshare](https://figshare.com/s/50b7544ad6b1f51de060)
+- Uncompress it in the pmr folder:
+    - `bzip2 -d truthy_direct_properties.nt.bz2`
+- Transform the .NT file into the MillenniumDB text format:
+    - `python3 scripts/nt_to_mdb truthy_direct_properties.nt wikidata.mdb`
+- Create the database in MillenniumDB
+    - `build/Release/bin/create_db ../data/wikidata.mdb dbs/wikidata`
+- Execute the benchmarks:
+    - `python3 scripts/wdbench_paths_mdb.py WDBench/sparql_paths_filtered.txt endpoints`
+    - `python3 scripts/wdbench_paths_mdb.py WDBench/sparql_paths_filtered.txt single_shortest`
+    - `python3 scripts/wdbench_paths_mdb.py WDBench/sparql_paths_filtered.txt all_shortest`
+    - `python3 scripts/wdbench_paths_mdb.py WDBench/sparql_paths_filtered.txt count`
+    - `python3 scripts/wdbench_paths_mdb.py WDBench/sparql_paths_filtered.txt construct_pmr`
+
+# Neo4J
+See the original Benchmark repository: https://github.com/MillenniumDB/WDBench#data-loading-for-neo4j
