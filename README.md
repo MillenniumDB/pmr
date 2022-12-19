@@ -44,31 +44,28 @@ These instructions works on Ubuntu 20.04. Other linux distros might need to inst
 - Set NEO4J_HOME with the path of the folder extracted
     - `export NEO4J_HOME=/path/to/neo4j/folder`
 
-- Change directory to that folder:
-    - `cd $NEO4J_HOME`
-
 - Create facebook database
     ```
-    bin/neo4j-admin import --database facebook \
+    $NEO4J_HOME/bin/neo4j-admin import --database facebook \
     --nodes $PMR_HOME/data/facebook_neo4j_nodes.csv \
     --relationships $PMR_HOME/data/facebook_neo4j_edges.csv
     ```
 
 - Create diamond1000 database
     ```
-    bin/neo4j-admin import --database diamond1000 \
+    $NEO4J_HOME/bin/neo4j-admin import --database diamond1000 \
     --nodes $PMR_HOME/data/diamond_1000_neo4j_nodes.csv \
     --relationships $PMR_HOME/data/diamond_1000_neo4j_edges.csv
     ```
 
-- Edit `conf/neo4j.conf`
+- Edit `$NEO4J_HOME/conf/neo4j.conf` adding the lines:
     ```
     dbms.transaction.timeout=1m
     dbms.default_database=facebook
     dbms.security.auth_enabled=false
     cypher.forbid_shortestpath_common_nodes=false
     ```
-- Run the benchmar with facebook graph:
+- Run the benchmark with facebook graph:
     - Start the neo4j server
         - `bin/neo4j console`
 
@@ -77,11 +74,11 @@ These instructions works on Ubuntu 20.04. Other linux distros might need to inst
 
     - After the benchmark is finished, kill the neo4j server with CTRL-C.
 
-- Run the benchmar with facebook graph:
-    - Edit `conf/neo4j.conf` and replace `dbms.default_database=facebook` with `dbms.default_database=diamond1000`
+- Run the benchmark with facebook graph:
+    - Edit `$NEO4J_HOME/conf/neo4j.conf` and replace `dbms.default_database=facebook` with `dbms.default_database=diamond1000`
 
     - Start the neo4j server
-        - `bin/neo4j console`
+        - `$NEO4J_HOME/bin/neo4j console`
     - Wait until the server is ready and run the benchmark in another terminal:
         - `python3 scripts/benchmark_neo4j_diamond.py`
 
@@ -107,4 +104,19 @@ For MillenniumDB we select 576 of the 660 [original queries](https://github.com/
     - `python3 scripts/wdbench_paths_mdb.py WDBench/sparql_paths_filtered.txt construct_pmr`
 
 # Neo4J
-See the original Benchmark repository: https://github.com/MillenniumDB/WDBench#data-loading-for-neo4j
+To load the graph into Neo4J see the original Benchmark repository: https://github.com/MillenniumDB/WDBench#data-loading-for-neo4j
+
+For Neo4J we only considered queries with cypher patterns that can be inside of the operators `shortestPath` and `allShortestPaths`. These queries are in the file `WDBench/sparql_paths_filtered.txt`
+
+To run the benchmark with wikidata graph:
+- Edit `$NEO4J_HOME/conf/neo4j.conf` and set `dbms.default_database=wikidata`
+
+- Start the neo4j server
+    - `$NEO4J_HOME/bin/neo4j console`
+
+- Wait until the server is ready and run the benchmarks in another terminal:
+    - `python3 scripts/wdbench_paths_neo4j.py WDBench/sparql_paths_filtered.txt`
+    - `python3 scripts/wdbench_paths_neo4j.py WDBench/sparql_paths_filtered.txt shortestPath`
+    - `python3 scripts/wdbench_paths_neo4j.py WDBench/sparql_paths_filtered.txt allShortestPaths`
+
+- After the benchmarks are finished, kill the neo4j server with CTRL-C.

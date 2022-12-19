@@ -4,27 +4,24 @@ import sys
 import os
 import re
 
-# Usage:
-# python cypher_benchmark.py <QUERIES_FILEPATH> <LIMIT> <PREFIX_NAME>
-# LIMIT = 0 will not add a limit
-
-#TODO: edit this
-function_path = ''
-# function_path = 'shortestPath'
-#function_path = 'AllShortestPaths'
-
-if len(sys.argv) < 4:
-    print("expeted args: <QUERIES_FILEPATH> <LIMIT> <PREFIX_NAME>")
+if len(sys.argv) < 2:
+    print('usage:')
+    print('python3 scripts/wdbench_paths_neo4j.py <QUERIES_FILE_PATH> <FUNCTION_NAME?>')
     exit(1)
 
+LIMIT = 100000
 QUERIES_FILE = sys.argv[1]
-LIMIT        = sys.argv[2]
-PREFIX_NAME  = sys.argv[3]
 
-########### EDIT THIS PARAMETERS ###########
-RESUME_FILE = f'results/{PREFIX_NAME}_NEO4J_L{LIMIT}.csv'
+RESUME_FILE = f'results/PATHS_NEO4J.csv'
 NEO4J_DATABSE = 'wikidata'
-############################################
+
+if len(sys.argv) >= 3:
+    FUNCTION_NAME  = sys.argv[2]
+    if FUNCTION_NAME != 'shortestPath' and FUNCTION_NAME != 'allShortestPaths':
+        print(f"Path function '{FUNCTION_NAME}' not recognized. Supported are 'shortestPath' and 'allShortestPaths'.")
+        exit(1)
+    RESUME_FILE = f'results/PATHS_NEO4J_{FUNCTION_NAME}.csv'
+
 
 # Check if output file already exists
 if os.path.exists(RESUME_FILE):
@@ -36,8 +33,11 @@ else:
 
 
 def execute_query(session, cypher_pattern, query_number):
-    #cypher_query = f'MATCH p = {function_path}( {cypher_pattern} ) RETURN p'
-    cypher_query = f'MATCH {cypher_pattern} RETURN *'
+    if FUNCTION_NAME == '':
+        cypher_query = f'MATCH {cypher_pattern} RETURN *'
+    else:
+        cypher_query = f'MATCH p = {FUNCTION_NAME}( {cypher_pattern} ) RETURN p'
+
     if LIMIT:
         cypher_query += f' LIMIT {LIMIT}'
 
