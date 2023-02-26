@@ -15,8 +15,9 @@ QUERIES_FILE = sys.argv[1]
 RESUME_FILE = f'results/PATHS_NEO4J.csv'
 NEO4J_DATABSE = 'wikidata'
 
+FUNCTION_NAME = ''
 if len(sys.argv) >= 3:
-    FUNCTION_NAME  = sys.argv[2]
+    FUNCTION_NAME = sys.argv[2]
     if FUNCTION_NAME != 'shortestPath' and FUNCTION_NAME != 'allShortestPaths':
         print(f"Path function '{FUNCTION_NAME}' not recognized. Supported are 'shortestPath' and 'allShortestPaths'.")
         exit(1)
